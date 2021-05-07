@@ -1,63 +1,80 @@
-import React from 'react'
+import React, { useState } from 'react'
+
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+  )
+
+const StatisticLine = ({ value, text}) => (
+  <div>
+    <div>{text} {value} </div>
+  </div>
+)
+
+const Statistics = (props) => {
+  if (props.clicks.allClicks === 0) {
+    return (
+      <div>
+        <h1>Statistics</h1>
+        <p>No feedback has been given yet!</p>   
+      </div>
+    )
+  }
+  const avrg = props.clicks.average / props.clicks.allClicks
+  const posPercentage = props.clicks.good / props.clicks.allClicks * 100
+  return (    
+    <div>
+      <h1>Statistics</h1>
+      <StatisticLine value={props.clicks.good} text={"Good feedback:"} />
+      <StatisticLine value={props.clicks.neutral} text={"Neutral feedback:"} />
+      <StatisticLine value={props.clicks.bad} text={"Bad feedback:"} />
+      <StatisticLine value={props.clicks.allClicks} text={"Total feedback:"} />
+      <StatisticLine value={avrg} text={"Average feedback:"} />
+      <StatisticLine value={posPercentage+"%"} text={"Positive percentage of feedback:"} />    
+    </div>   
+  )
+}
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
+  const [clicks, setClicks] = useState({
+    good: 0, neutral: 0, bad: 0, allClicks: 0, average: 0
+  })
+
+  const handleGoodClick = () => {
+    setClicks({
+      ...clicks,
+      good: clicks.good + 1,
+      allClicks: clicks.allClicks + 1,
+      average: clicks.average + 1
+    })
   }
 
+  const handleNeutralClick = () => {
+    setClicks({
+      ...clicks,
+      neutral: clicks.neutral + 1,
+      allClicks: clicks.allClicks + 1,
+      average: clicks.average + 0
+    })
+  }
+
+  const handleBadClick = () => {
+    setClicks({
+      ...clicks,
+      bad: clicks.bad + 1,
+      allClicks: clicks.allClicks + 1,
+      average: clicks.average - 1
+    })
+  }
+ 
   return (
     <div>
-      <Header course={course} />
-      <Content course={course}/>
-      <Total course={course}/>
-    </div>
-  )
-}
-
-const Header = (props) => {
-  return (
-    <h1>{props.course.name}</h1>
-  )
-}
-
-const Content = (props) => {
-  return (
-    <div>
-        <Part pt={props.course.parts[0].name} exrc={props.course.parts[0].exercises}/>    
-        <Part pt={props.course.parts[1].name} exrc={props.course.parts[1].exercises}/>    
-        <Part pt={props.course.parts[2].name} exrc={props.course.parts[2].exercises}/>    
-    </div>
-  )
-}
-
-const Total = (props) => {
-  return (
-    <div>
-        Total exercises: {props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises} 
-    </div>
-  )
-}
-
-const Part = (props) => {
-  return (
-    <div>
-      <p>
-        {props.pt}, exercises: {props.exrc}
-      </p>
+      <h1> Give feedback: </h1>
+      <Button handleClick={handleGoodClick} text="Good :)" />
+      <Button handleClick={handleNeutralClick} text="Neutral :I" />
+      <Button handleClick={handleBadClick} text="Bad :(" />
+      <Statistics clicks={clicks} />
     </div>
   )
 }
