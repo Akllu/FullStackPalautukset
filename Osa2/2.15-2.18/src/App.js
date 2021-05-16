@@ -3,12 +3,19 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [ persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('Add a new person')
   const [ newNumber, setNewNumber ] = useState('Add a phone number')
   const [ newFilter, setNewFilter ] = useState('')
+
+  let msg = {
+    message: null,
+    type: null
+  }
+  const [ notification, setNotification ] = useState(msg)
 
   useEffect(() => {
     personService
@@ -34,15 +41,40 @@ const App = () => {
           .update(ID, nameObject)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id === returnedPerson.id ? returnedPerson : person))
+            msg = {
+              message: `Updated ${newName} phone number`,
+              type: 'success'
+            }
+            setNotification(msg)
             setNewName('')
             setNewNumber('')
+            setTimeout(() => {
+              setNotification({message: null, type: null})
+            }, 5000)
+          })
+          .catch(err => {
+            msg = {
+              message: `${newName} has already been removed from server`,
+              type: 'error'
+            }
+            setNotification(msg)
+            setTimeout(() => {
+              setNotification({message: null, type: null})
+            }, 5000)
           })
         }
     }
     else if(persons.some(person => person.number === newNumber))
     {
-      alert(`Phone number ${newNumber} is already in use!`)
+      msg = {
+        message: `Phone number ${newNumber} is already in use!`,
+        type: 'success'
+      }
+      setNotification(msg)
       setNewNumber('')
+      setTimeout(() => {
+        setNotification({name: null, type: null})
+      }, 5000)
     }
     else {
       const nameObject = {
@@ -54,8 +86,26 @@ const App = () => {
         .create(nameObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
+          msg = {
+            message: `Added ${newName}`,
+            type: 'success'
+          }
+          setNotification(msg)
           setNewName('')
           setNewNumber('')
+          setTimeout(() => {
+            setNotification({message: null, type: null})
+          }, 5000)
+        })
+        .catch(err => {
+          msg = {
+            message: 'Unexpected error!',
+            type: 'error'
+          }
+          setNotification(msg)
+          setTimeout(() => {
+            setNotification({message: null, type: null})
+          }, 5000)
         })
     }
   }
@@ -71,6 +121,24 @@ const App = () => {
       .then(response => {
         const updatedPersons = persons.filter(p => p.id !== personID)
         setPersons(updatedPersons)
+        msg = {
+          message: `Deleted ${person.name}`,
+          type: 'success'
+        }
+        setNotification(msg)
+        setTimeout(() => {
+          setNotification({message: null, type: null})
+        }, 5000)
+      })
+      .catch(err => {
+        msg = {
+          message: `${person.name} has already been removed from server`,
+          type: 'error'
+        }
+        setNotification(msg)
+        setTimeout(() => {
+          setNotification({message: null, type: null})
+        }, 5000)
       })
     }
   }
@@ -90,6 +158,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification notification={notification} />
+      
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h2> Add a new person </h2>
