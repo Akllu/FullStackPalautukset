@@ -1,12 +1,12 @@
 {
-  "name": "fullstack-osa3",
+  "name": "fullstack-osa4",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "build:ui": "rm -rf build && cd ../Frontend && npm run build && cp -r build ../Backend",
     "deploy": "git push heroku main",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
@@ -26,6 +26,7 @@
   "homepage": "https://github.com/Akllu/FullStack-Osa3#readme",
   "devDependencies": {
     "eslint": "^8.4.1",
+    "jest": "^27.4.5",
     "nodemon": "^2.0.15"
   },
   "dependencies": {
@@ -35,5 +36,8 @@
     "mongoose": "^6.1.2",
     "mongoose-unique-validator": "^3.0.0",
     "morgan": "^1.10.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
