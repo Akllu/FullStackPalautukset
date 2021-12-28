@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const { initialBlogs, blogsInDb } = require('./test_helper')
 
 beforeEach(async () => {
@@ -31,6 +32,25 @@ describe('Initialized blogs', () => {
 })
 
 describe('Addition of a new blog', () => {
+  let token
+  beforeEach(async () => {
+    await User.deleteMany({})
+    const user = {
+      username: 'testUser',
+      name: 'test',
+      password: 'test123'
+    }
+
+    await api
+      .post('/api/users')
+      .send(user)
+
+    const loggedUser = await api
+      .post('/api/login')
+      .send(user)
+
+    token = loggedUser.body.token
+  })
   test('length grows when using post method ', async () => {
     const testBlog = {
       title: 'test',
@@ -41,6 +61,7 @@ describe('Addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(testBlog)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -61,6 +82,7 @@ describe('Addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(testBlog)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -77,8 +99,26 @@ describe('Addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(testBlog)
       .expect(400)
+
+    const blogsAtEnd = await blogsInDb()
+    expect(blogsAtEnd).toHaveLength(initialBlogs.length)
+  })
+
+  test('fails with status code 401 if token is missing', async () => {
+    const testBlog = {
+      title: 'test',
+      author: 'test',
+      url: 'test',
+      likes: 1
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(testBlog)
+      .expect(401)
 
     const blogsAtEnd = await blogsInDb()
     expect(blogsAtEnd).toHaveLength(initialBlogs.length)
@@ -131,21 +171,51 @@ describe('Update of a blog', () => {
 })
 
 describe('Deletion of a blog', () => {
+  let token
+  beforeEach(async () => {
+    await User.deleteMany({})
+    const user = {
+      username: 'testUser',
+      name: 'test',
+      password: 'test123'
+    }
+
+    await api
+      .post('/api/users')
+      .send(user)
+
+    const loggedUser = await api
+      .post('/api/login')
+      .send(user)
+
+    token = loggedUser.body.token
+  })
+
   test('succeeds with status code 204 if id is valid', async () => {
+    const testBlog = {
+      title: 'test',
+      author: 'test',
+      url: 'test',
+      likes: 1
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(testBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
     const blogsAtStart = await blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+    const blogToDelete = blogsAtStart[initialBlogs.length]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await blogsInDb()
-
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1)
-
-    const authors = blogsAtEnd.map(a => a.author)
-
-    expect(authors).not.toContain(blogToDelete.author)
+    expect(blogsAtEnd).toHaveLength(initialBlogs.length)
   })
 
   test('fails with status code 400 if id is invalid', async () => {
@@ -153,10 +223,23 @@ describe('Deletion of a blog', () => {
 
     await api
       .delete(`/api/blogs/${invalidId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
 
     const blogsAtEnd = await blogsInDb()
+    expect(blogsAtEnd).toHaveLength(initialBlogs.length)
+  })
 
+  test('fails with status code 401 if token is missing', async () => {
+    const blogsAtStart = await blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401)
+
+    const blogsAtEnd = await blogsInDb()
     expect(blogsAtEnd).toHaveLength(initialBlogs.length)
   })
 })
