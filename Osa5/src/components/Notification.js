@@ -8,7 +8,7 @@ const SuccessMessage = styled.div`
   border: 3px solid green;
   border-radius: 10px;
   padding: 10px;
-`;
+`
 
 const ErrorMessage = styled.div`
   font-size: 18px;
@@ -17,15 +17,15 @@ const ErrorMessage = styled.div`
   border: 3px solid red;
   border-radius: 10px;
   padding: 10px;
-`;
+`
 
 const Notification = ({ message }) => {
   if (message === null) return null
 
   return (
     message.type === 'success'
-    ? <SuccessMessage>{message.content}</SuccessMessage>
-    : <ErrorMessage>{message.content}</ErrorMessage> 
+      ? <SuccessMessage>{message.content}</SuccessMessage>
+      : <ErrorMessage>{message.content}</ErrorMessage>
   )
 }
 

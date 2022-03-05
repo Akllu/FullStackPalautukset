@@ -31,7 +31,7 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
-      <button style={{marginLeft: 5}} onClick={() => setToggleView(!toggleView)}>
+      <button style={{ marginLeft: 5 }} onClick={() => setToggleView(!toggleView)}>
         {toggleView ? 'Hide' : 'View'}
       </button>
       {toggleView &&
@@ -39,14 +39,14 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
           {blog.url}
           <div>
             Likes {blog.likes}
-            <button style={{marginLeft: 5}} onClick={addLike}>Like</button>
+            <button style={{ marginLeft: 5 }} onClick={addLike}>Like</button>
           </div>
-          {blog.user.name === user.name && 
-            <button style={deleteButton} onClick={() => deleteBlog(blog)}>Remove</button> 
+          {blog.user.name === user.name &&
+            <button style={deleteButton} onClick={() => deleteBlog(blog)}>Remove</button>
           }
         </div>
       }
-    </div>  
+    </div>
   )}
 
 export default Blog
