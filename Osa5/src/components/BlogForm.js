@@ -1,39 +1,28 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 
-const BlogForm = ({ setMessage, blogs, setBlogs }) => {
+const BlogForm = ({ setMessage, createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [likes, setLikes] = useState('')
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    const blog = {
+    createBlog({
       title: title,
       author: author,
       url: url,
       likes: likes
-    }
+    })
 
-    try {
-      await blogService.create(blog)
-      setMessage({ type: 'success', content: `A new blog ${title} by ${author} added!` })
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-      setBlogs(blogs.concat(blog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      setLikes('')
-      
-    } catch (exception) {
-      setMessage({ type: 'error', content: 'Something went wrong!' })
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    }
+    setMessage({ type: 'success', content: `A new blog ${title} by ${author} added!` })
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+    setLikes('')
   }
 
   return (

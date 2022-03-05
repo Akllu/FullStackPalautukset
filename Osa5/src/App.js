@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -12,10 +13,11 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort((a,b) => (a.likes < b.likes) ? 1 : -1))
     )  
   }, [])
 
@@ -61,6 +63,30 @@ const App = () => {
     }, 5000)
   }
 
+  const addBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+      })
+  }
+
+  const addLike = async (blogObject) => {
+    const updatedBlog = await blogService.update(blogObject)
+    setBlogs(blogs.map(blog =>
+      blog.id === updatedBlog.id ? {...blog, likes: updatedBlog.likes} : blog)
+    )
+  }
+
+  const deleteBlog = async (blogObject) => {
+    const confirm = window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}?`)
+    if (confirm) {
+      await blogService.remove(blogObject.id)
+      setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+    }
+  }
+
   return (
     <div>
       <h1>Blogs</h1>
@@ -69,9 +95,11 @@ const App = () => {
       {user === null ? <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />
       : <div>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateLikes={addLike} deleteBlog={deleteBlog} user={user} />
           )}
-          <div><BlogForm setMessage={setMessage} blogs={blogs} setBlogs={setBlogs} /></div>
+          <Togglable buttonLabel='Create a new blog' ref={blogFormRef}>
+            <BlogForm setMessage={setMessage} createBlog={addBlog} />
+          </Togglable>
         </div>
       }
     </div>
