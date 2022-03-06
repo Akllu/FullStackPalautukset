@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs.sort((a,b) => (a.likes < b.likes) ? 1 : -1))
+      setBlogs(blogs)
     )
   }, [])
 
@@ -94,10 +94,13 @@ const App = () => {
       {user && <p>{user.name} logged in <button onClick={handleLogout} >Logout</button></p>}
       {user === null
         ? <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />
-        : <div>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateLikes={addLike} deleteBlog={deleteBlog} user={user} />
-          )}
+        : <div className='blogsContainer'>
+          {blogs
+            .sort((a,b) => (a.likes < b.likes) ? 1 : -1)
+            .map(blog =>
+              <Blog key={blog.id} blog={blog} updateLikes={addLike} deleteBlog={deleteBlog} user={user} />
+            )
+          }
           <Togglable buttonLabel='Create a new blog' ref={blogFormRef}>
             <BlogForm setMessage={setMessage} createBlog={addBlog} />
           </Togglable>

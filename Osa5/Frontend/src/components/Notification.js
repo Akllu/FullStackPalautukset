@@ -25,7 +25,7 @@ const Notification = ({ message }) => {
   return (
     message.type === 'success'
       ? <SuccessMessage>{message.content}</SuccessMessage>
-      : <ErrorMessage>{message.content}</ErrorMessage>
+      : <ErrorMessage className='error'>{message.content}</ErrorMessage>
   )
 }
 
