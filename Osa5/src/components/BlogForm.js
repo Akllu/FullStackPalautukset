@@ -32,19 +32,47 @@ const BlogForm = ({ setMessage, createBlog }) => {
       <form onSubmit={handleSubmit}>
         <div>
           Title:
-          <input type='text' value={title} name='Title' onChange={({ target }) => setTitle(target.value) } />
+          <input
+            type='text'
+            value={title}
+            name='Title'
+            onChange={({ target }) => setTitle(target.value) }
+            placeholder='Enter a title'
+            id='title-input'
+          />
         </div>
         <div>
           Author:
-          <input type='text' value={author} name='Author' onChange={({ target }) => setAuthor(target.value)} />
+          <input
+            type='text'
+            value={author}
+            name='Author'
+            onChange={({ target }) => setAuthor(target.value)}
+            placeholder='Enter a author'
+            id='author-input'
+          />
         </div>
         <div>
           URL:
-          <input type='text' value={url} name='Url' onChange={({ target }) => setUrl(target.value)} />
+          <input
+            type='text'
+            value={url}
+            name='Url'
+            onChange={({ target }) => setUrl(target.value)}
+            placeholder='Enter a URL'
+            id='url-input'
+          />
         </div>
         <div>
           Likes:
-          <input type='number' value={likes} name='Likes' onChange={({ target }) => setLikes(target.value)} />
+          <input
+            type='number'
+            value={likes}
+            name='Likes'
+            onChange={({ target }) => setLikes(target.value)}
+            placeholder='Enter likes'
+            id='likes-input'
+          />
         </div>
         <button type='submit' >Submit</button>
       </form>

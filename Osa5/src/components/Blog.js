@@ -29,13 +29,13 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='testBlogContainer'>
       {blog.title} {blog.author}
       <button style={{ marginLeft: 5 }} onClick={() => setToggleView(!toggleView)}>
         {toggleView ? 'Hide' : 'View'}
       </button>
       {toggleView &&
-        <div>
+        <div className='testTogglableContent'>
           {blog.url}
           <div>
             Likes {blog.likes}
