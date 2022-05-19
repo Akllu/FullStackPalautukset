@@ -11,40 +11,52 @@ export const ALL_AUTHORS = gql`
 `
 
 export const ALL_BOOKS = gql`
+  query getAllBooks($author: String, $genre: String) {
+    allBooks(author: $author, genre: $genre) {
+      title
+      published
+      genres
+      author {
+        name
+      }
+    }
+  }
+`
+
+export const ALL_BOOKS_AND_GENRES = gql`
+  query getAllBooksAndGenres($author: String, $genre: String) {
+    allGenres
+    allBooks(author: $author, genre: $genre) {
+      title
+      published
+      author {
+        name
+      }
+    }
+  }
+`
+
+export const ME = gql`
   query {
+    me {
+      username
+      favoriteGenre
+    }
+  }
+`
+
+export const FAVORITE_BOOKS = gql`
+  query {
+    me {
+      favoriteGenre
+    }
     allBooks {
       title
       published
-      author
-    }
-  }
-`
-
-export const ADD_BOOK = gql`
-  mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
-    addBook(
-      title: $title,
-      author: $author,
-      published: $published,
-      genres: $genres
-    ) {
-      title
-      published
-      author
       genres
-    }
-  }
-`
-
-export const EDIT_AUTHOR = gql`
-  mutation updateAuthor($name: String!, $born: Int!) {
-    editAuthor(
-      name: $name,
-      setBornTo: $born
-    ) {
-      name
-      born
-      bookCount
+      author {
+        name
+      }
     }
   }
 `

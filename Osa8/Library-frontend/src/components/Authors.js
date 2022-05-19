@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
-import { ALL_AUTHORS, EDIT_AUTHOR } from '../graphql/queries'
+import { ALL_AUTHORS } from '../graphql/queries'
+import { EDIT_AUTHOR } from '../graphql/mutations'
 
 const UpdateAuthor = ({ authors }) => {
   const [name, setName] = useState('')
@@ -74,7 +75,7 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
-      <UpdateAuthor authors={authors} />
+      {props.token && <UpdateAuthor authors={authors} /> }
     </div>
   )
 }
