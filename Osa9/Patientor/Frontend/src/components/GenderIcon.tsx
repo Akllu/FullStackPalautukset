@@ -1,4 +1,5 @@
 import { TbGenderMale, TbGenderFemale, TbGenderNeutrois } from "react-icons/tb";
+import { assertNever } from "../helpers";
 import { Gender } from "../types";
 
 const GenderIcon = ({ gender }: { gender: Gender}) => {
@@ -7,8 +8,10 @@ const GenderIcon = ({ gender }: { gender: Gender}) => {
       return <TbGenderMale />;
     case Gender.Female:
       return <TbGenderFemale />;      
-    default:
+    case Gender.Other:
       return <TbGenderNeutrois />;
+    default:
+      return assertNever(gender);
   }
 };
 

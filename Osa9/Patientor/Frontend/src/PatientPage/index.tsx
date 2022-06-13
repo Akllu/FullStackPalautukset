@@ -6,6 +6,7 @@ import { apiBaseUrl } from "../constants";
 import { useStateValue, setPatient } from "../state";
 import { Patient } from "../types";
 import GenderIcon from "../components/GenderIcon";
+import EntryDetails from '../components/EntryDetails';
 
 const PatientPage = () => {
   const [{ patient }, dispatch] = useStateValue();
@@ -24,7 +25,7 @@ const PatientPage = () => {
     };
     if (id && patient?.id !== id) {
       void fetchPatient(id);
-    }  
+    }
   }, [dispatch]);
 
   if (!patient) return null;
@@ -37,6 +38,10 @@ const PatientPage = () => {
         <br />
         occupation: {patient.occupation}
       </p>
+      <h3>entries</h3> 
+      {patient.entries.length > 0 && patient.entries.map(e =>
+        <EntryDetails key={e.id} entry={e}/>
+      )}
     </div>
   );
 };
