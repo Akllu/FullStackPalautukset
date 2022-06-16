@@ -56,6 +56,12 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
             <i style={{ marginLeft: "5px" }}>{entry.employerName}</i>
           </div>
           <i>{entry.description}</i>
+          {entry.sickLeave && 
+            <>
+              <b>Sick leave began: {entry.sickLeave.startDate}</b>
+              <b>Sick leave ended: {entry.sickLeave.endDate}</b>
+            </>
+          }
           {entry.diagnosisCodes &&
             <ul>
               {entry.diagnosisCodes?.map(c => 

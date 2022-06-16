@@ -61,9 +61,15 @@ export enum Gender {
 }
 
 export enum HealthCheckRating {
-  "Healthy" = 0,
-  "LowRisk" = 1,
-  "HighRisk" = 2,
-  "CriticalRisk" = 3
+  Healthy = "Healthy",
+  LowRisk = "LowRisk",
+  HighRisk = "HighRisk",
+  CriticalRisk = "CriticalRisk"
+}
+
+export enum EntryType {
+  Hospital = "Hospital",
+  OccupationalHealthcare = "OccupationalHealthcare",
+  HealthCheck = "HealthCheck"
 }
 //#endregion enum
