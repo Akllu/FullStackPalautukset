@@ -16,3 +16,6 @@ https://fullstackopen.com/en/
 
 ## Part 11
 ![fullstack-certificate-part11](https://user-images.githubusercontent.com/73988745/184143531-e49af0e3-8073-4850-83d5-dd413deee606.png)
+
+## Part 12
+![fullstack-certificate-part12](https://user-images.githubusercontent.com/73988745/190869646-2b3c58a4-7918-418f-949c-246a2dc27030.png)
